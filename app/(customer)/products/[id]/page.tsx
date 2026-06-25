@@ -155,6 +155,18 @@ export default async function ProductDetailPage({
   const mock = getMockProduct(id);
   if (!mock) notFound();
 
+  // Still try to get the real seller phone even for mock products
+  let mockSellerPhone = "";
+  try {
+    const reseller = await db.reseller.findFirst({
+      where: { isActive: true },
+      select: { whatsappPhone: true },
+    });
+    mockSellerPhone = reseller?.whatsappPhone ?? "";
+  } catch {
+    // DB unavailable — leave blank
+  }
+
   const mediaItems = mock.media.map((m, i) => ({
     url: m.cloudinaryUrl,
     mediaType: m.mediaType as "IMAGE" | "VIDEO",
@@ -178,7 +190,7 @@ export default async function ProductDetailPage({
 
           {/* Pricing CTA */}
           <WhatsAppInquiryForm
-            sellerPhone="919999999999"
+            sellerPhone={mockSellerPhone}
             productTitle={mock.title}
             productCategory={mock.category}
             productDescription={mock.description}
