@@ -33,7 +33,7 @@ export default async function HomePage() {
   // Fall back to mock products when DB is empty or unavailable
   const displayProducts =
     featured.length > 0
-      ? featured.map((p) => ({
+      ? featured.map((p: typeof featured[number]) => ({
           id: p.id,
           title: p.title,
           priceMin: p.priceMin.toString(),

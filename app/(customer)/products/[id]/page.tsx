@@ -15,11 +15,11 @@ export async function generateStaticParams() {
       select: { id: true },
     });
     return [
-      ...products.map((p) => ({ id: p.id })),
-      ...MOCK_PRODUCTS.map((p) => ({ id: p.id })),
+      ...products.map((p: { id: string }) => ({ id: p.id })),
+      ...MOCK_PRODUCTS.map((p: { id: string }) => ({ id: p.id })),
     ];
   } catch {
-    return MOCK_PRODUCTS.map((p) => ({ id: p.id }));
+    return MOCK_PRODUCTS.map((p: { id: string }) => ({ id: p.id }));
   }
 }
 

@@ -31,7 +31,7 @@ export default async function EditProductPage({
 
   if (!product || product.resellerId !== resellerId) notFound();
 
-  const existingMedia = product.media.map((m) => ({
+  const existingMedia = product.media.map((m: typeof product.media[number]) => ({
     id: m.id,
     cloudinaryUrl: m.cloudinaryUrl,
     cloudinaryPublicId: m.cloudinaryPublicId,

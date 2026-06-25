@@ -52,7 +52,7 @@ export async function POST(
       },
     }),
     // Group broadcast jobs
-    ...groups.map((g) =>
+    ...groups.map((g: typeof groups[number]) =>
       db.postJob.create({
         data: {
           productId: id,
@@ -65,7 +65,7 @@ export async function POST(
 
   // Enqueue BullMQ jobs (non-blocking)
   if (product.reseller.whatsappAccessToken) {
-    await enqueuePublishJobs({ productId: id, resellerId, groupIds: groups.map((g) => g.groupId) });
+    await enqueuePublishJobs({ productId: id, resellerId, groupIds: groups.map((g: typeof groups[number]) => g.groupId) });
   }
 
   return NextResponse.json({ queued: true }, { status: 202 });

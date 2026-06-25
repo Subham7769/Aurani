@@ -42,7 +42,7 @@ export default async function ShippingPage() {
         </div>
         {paidOrders.length > 0 && (
           <CreateShipmentButton
-            orders={paidOrders.map((o) => ({ id: o.id, title: o.product.title }))}
+            orders={paidOrders.map((o: typeof paidOrders[number]) => ({ id: o.id, title: o.product.title }))}
           />
         )}
       </div>

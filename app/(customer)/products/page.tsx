@@ -37,7 +37,7 @@ export default async function ProductsPage({
       orderBy: { publishedAt: "desc" },
     });
 
-    cards = products.map((p) => ({
+    cards = products.map((p: typeof products[number]) => ({
       id: p.id,
       title: p.title,
       category: p.category as ProductCardData["category"],
