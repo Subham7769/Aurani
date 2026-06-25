@@ -24,7 +24,7 @@ export default async function ProductsPage() {
     },
   });
 
-  const rows: ProductRow[] = products.map((p) => ({
+  const rows: ProductRow[] = products.map((p: typeof products[number]) => ({
     id: p.id,
     title: p.title,
     category: p.category,

@@ -26,7 +26,7 @@ export default async function OrdersPage() {
     }),
   ]);
 
-  const rows: OrderRow[] = orders.map((o) => ({
+  const rows: OrderRow[] = orders.map((o: typeof orders[number]) => ({
     id: o.id,
     product: o.product.title,
     customer: `${o.customerName ?? ""}${o.customerPhone ? ` (${o.customerPhone})` : ""}`.trim() || o.customerPhone,

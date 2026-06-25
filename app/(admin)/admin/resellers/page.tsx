@@ -13,7 +13,7 @@ export default async function ResellersPage() {
     orderBy: { createdAt: "desc" },
   });
 
-  const rows: ResellerRow[] = resellers.map((r) => ({
+  const rows: ResellerRow[] = resellers.map((r: typeof resellers[number]) => ({
     id: r.id,
     email: r.user.email,
     commission: `${(Number(r.commissionRate) * 100).toFixed(0)}%`,

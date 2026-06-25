@@ -21,7 +21,7 @@ export default async function ShippingPage() {
     orderBy: { createdAt: "desc" },
   });
 
-  const rows: ShipmentRow[] = shipments.map((s) => ({
+  const rows: ShipmentRow[] = shipments.map((s: typeof shipments[number]) => ({
     id: s.id,
     orderId: s.orderId,
     product: s.order.product.title,
