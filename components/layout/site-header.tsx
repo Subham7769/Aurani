@@ -60,7 +60,7 @@ export function SiteHeader() {
         {/* Auth */}
         <div className="flex items-center gap-3">
           {isSignedIn ? (
-            <UserButton afterSignOutUrl="/" />
+            <UserButton />
           ) : (
             <Link
               href="/sign-in"
