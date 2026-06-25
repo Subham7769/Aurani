@@ -1,0 +1,223 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ─── Enums ────────────────────────────────────────────────────────────────────
+
+enum Role {
+  ADMIN
+  RESELLER
+  CUSTOMER
+}
+
+enum Category {
+  CLOTHING
+  JEWELLERY
+  HOME_ESSENTIALS
+}
+
+enum ProductStatus {
+  DRAFT
+  ACTIVE
+  ARCHIVED
+}
+
+enum MediaType {
+  IMAGE
+  VIDEO
+}
+
+enum JobStatus {
+  PENDING
+  SUCCESS
+  FAILED
+  NOT_CONFIGURED
+}
+
+enum OrderStatus {
+  PENDING
+  PAID
+  CANCELLED
+}
+
+enum PaymentStatus {
+  CAPTURED
+  FAILED
+}
+
+// ─── Models ───────────────────────────────────────────────────────────────────
+
+model User {
+  id        String   @id @default(cuid())
+  clerkId   String   @unique
+  email     String   @unique
+  role      Role     @default(CUSTOMER)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  reseller Reseller?
+}
+
+model Reseller {
+  id     String @id @default(cuid())
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  commissionRate Decimal @default(0) @db.Decimal(5, 4)
+  isActive       Boolean @default(false)
+
+  // WhatsApp Business credentials (stored encrypted)
+  whatsappPhoneNumberId   String?
+  whatsappAccessToken     String?
+  whatsappCatalogId       String?
+  whatsappPhone           String?  // Customer-facing number for wa.me links (digits only, e.g. 919876543210)
+
+  // Telegram
+  telegramBotToken String? // encrypted
+  telegramChatId   String?
+
+  // Instagram (Meta Graph API)
+  instagramAccessToken String? // encrypted
+  instagramAccountId   String?
+
+  // Facebook (Meta Graph API)
+  facebookPageToken String? // encrypted
+  facebookPageId    String?
+
+  // Razorpay linked account
+  razorpayAccountId String?
+
+  // Shiprocket credentials (stored encrypted)
+  shiprocketEmail             String?
+  shiprocketPasswordEncrypted String?
+  shiprocketJwt               String?
+  shiprocketJwtExpiresAt      DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  products       Product[]
+  whatsAppGroups WhatsAppGroup[]
+  orders         Order[]
+}
+
+model Product {
+  id          String        @id @default(cuid())
+  resellerId  String
+  reseller    Reseller      @relation(fields: [resellerId], references: [id], onDelete: Cascade)
+
+  title       String
+  description String        @db.Text
+  category    Category
+  priceMin    Decimal       @db.Decimal(10, 2)
+  priceMax    Decimal       @db.Decimal(10, 2)
+  status      ProductStatus @default(DRAFT)
+
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  publishedAt DateTime?
+
+  media    ProductMedia[]
+  postJobs PostJob[]
+  orders   Order[]
+}
+
+model ProductMedia {
+  id               String    @id @default(cuid())
+  productId        String
+  product          Product   @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  cloudinaryUrl      String
+  cloudinaryPublicId String
+  mediaType          MediaType
+  order              Int
+
+  createdAt DateTime @default(now())
+
+  @@index([productId, order])
+}
+
+model WhatsAppGroup {
+  id         String   @id @default(cuid())
+  resellerId String
+  reseller   Reseller @relation(fields: [resellerId], references: [id], onDelete: Cascade)
+
+  groupId    String
+  groupName  String
+  isSelected Boolean @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([resellerId, groupId])
+}
+
+model PostJob {
+  id        String    @id @default(cuid())
+  productId String
+  product   Product   @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  platform     String
+  status       JobStatus @default(PENDING)
+  errorMessage String?
+  attemptedAt  DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([productId, platform])
+}
+
+model Order {
+  id         String   @id @default(cuid())
+  productId  String
+  product    Product  @relation(fields: [productId], references: [id])
+  resellerId String
+  reseller   Reseller @relation(fields: [resellerId], references: [id])
+
+  customerPhone    String
+  customerName     String?
+  amount           Decimal     @db.Decimal(10, 2)
+  razorpayOrderId  String?     @unique
+  razorpayPaymentLinkId String? @unique
+  status           OrderStatus @default(PENDING)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  payment  Payment?
+  shipment Shipment?
+}
+
+model Payment {
+  id      String @id @default(cuid())
+  orderId String @unique
+  order   Order  @relation(fields: [orderId], references: [id])
+
+  razorpayPaymentId String  @unique
+  transferId        String?
+  commissionAmount  Decimal @db.Decimal(10, 2)
+  resellerAmount    Decimal @db.Decimal(10, 2)
+  status            PaymentStatus
+
+  capturedAt DateTime @default(now())
+}
+
+model Shipment {
+  id      String @id @default(cuid())
+  orderId String @unique
+  order   Order  @relation(fields: [orderId], references: [id])
+
+  shiprocketOrderId String?
+  awbCode           String?
+  status            String  @default("PENDING")
+  trackingUrl       String?
+  labelUrl          String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

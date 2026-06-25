@@ -1,26 +1,119 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@custom-variant dark (&:is(.dark *));
 
 @theme inline {
+  /* Colors */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-success: var(--success);
+  --color-aurani-whatsapp: var(--aurani-whatsapp);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+
+  /* Typography */
+  --font-sans: var(--font-dm-sans);
+  --font-serif: var(--font-cormorant-garamond);
+  --font-heading: var(--font-serif);
   --font-mono: var(--font-geist-mono);
+
+  /* Radius scale */
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+/* ─── Aurani Light Theme ─────────────────────────────────────────────── */
+:root {
+  /* Base */
+  --background: oklch(0.985 0.007 80);
+  --foreground: oklch(0.152 0.013 58);
+
+  /* Card & Popover */
+  --card: oklch(0.962 0.012 76);
+  --card-foreground: oklch(0.152 0.013 58);
+  --popover: oklch(0.962 0.012 76);
+  --popover-foreground: oklch(0.152 0.013 58);
+
+  /* Brand Primary — deep plum-rose */
+  --primary: oklch(0.376 0.092 346);
+  --primary-foreground: oklch(0.985 0 0);
+
+  /* Secondary — warm neutral */
+  --secondary: oklch(0.940 0.012 74);
+  --secondary-foreground: oklch(0.152 0.013 58);
+
+  /* Muted — very light warm */
+  --muted: oklch(0.940 0.012 74);
+  --muted-foreground: oklch(0.536 0.022 64);
+
+  /* Accent — champagne gold */
+  --accent: oklch(0.742 0.098 68);
+  --accent-foreground: oklch(0.152 0.013 58);
+
+  /* Semantic */
+  --destructive: oklch(0.565 0.22 27);
+  --success: oklch(0.520 0.090 150);
+
+  /* Borders & inputs */
+  --border: oklch(0.906 0.018 72);
+  --input: oklch(0.906 0.018 72);
+  --ring: oklch(0.376 0.092 346);
+
+  /* Corner radius — refined, not pill */
+  --radius: 0.375rem;
+
+  /* Custom Aurani tokens */
+  --aurani-whatsapp: #25D366;
+
+  /* Sidebar — shares brand tokens */
+  --sidebar: oklch(0.962 0.012 76);
+  --sidebar-foreground: oklch(0.152 0.013 58);
+  --sidebar-primary: oklch(0.376 0.092 346);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.940 0.012 74);
+  --sidebar-accent-foreground: oklch(0.152 0.013 58);
+  --sidebar-border: oklch(0.906 0.018 72);
+  --sidebar-ring: oklch(0.376 0.092 346);
+}
+
+/* ─── Base Layer ──────────────────────────────────────────────────────── */
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
   }
-}
-
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  body {
+    @apply bg-background text-foreground;
+  }
+  html {
+    @apply font-sans;
+  }
 }
