@@ -51,7 +51,7 @@ export default async function EditProductPage({
         <div className="rounded-lg border border-border bg-card p-4">
           <h3 className="mb-3 font-sans text-sm font-medium text-foreground">Post Status</h3>
           <div className="flex flex-col gap-2">
-            {product.postJobs.map((job) => {
+            {product.postJobs.map((job: typeof product.postJobs[number]) => {
               const platform = job.platform.startsWith("WHATSAPP_GROUP")
                 ? "WHATSAPP_GROUP"
                 : "WHATSAPP_CATALOG";
