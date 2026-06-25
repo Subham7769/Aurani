@@ -91,7 +91,7 @@ export default async function ProductDetailPage({
     });
 
     if (product) {
-      const mediaItems = product.media.map((m, i) => ({
+      const mediaItems = product.media.map((m: typeof product.media[number], i: number) => ({
         url: m.cloudinaryUrl,
         mediaType: m.mediaType as "IMAGE" | "VIDEO",
         alt: product.title,
