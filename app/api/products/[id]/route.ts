@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import { db } from "@/lib/db";
 import { getResellerId } from "@/lib/auth";
-import { Category } from "@prisma/client";
+const VALID_CATEGORIES = ["CLOTHING", "JEWELLERY", "HOME_ESSENTIALS"] as const;
 
 async function getOwnedProduct(productId: string, resellerId: string) {
   const product = await db.product.findUnique({
@@ -50,7 +50,7 @@ export async function PATCH(
   const body = await req.json();
   const { title, description, category, priceMin, priceMax, status, newMedia } = body;
 
-  if (category && !Object.values(Category).includes(category)) {
+  if (category && !VALID_CATEGORIES.includes(category)) {
     return NextResponse.json({ error: "Invalid category" }, { status: 400 });
   }
 

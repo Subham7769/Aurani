@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import { db } from "@/lib/db";
 import { getResellerId } from "@/lib/auth";
-import { Category } from "@prisma/client";
+const VALID_CATEGORIES = ["CLOTHING", "JEWELLERY", "HOME_ESSENTIALS"] as const;
 
 export async function GET() {
   const { userId } = await auth();
@@ -36,7 +36,7 @@ export async function POST(req: Request) {
   if (!title?.trim()) {
     return NextResponse.json({ error: "Title is required" }, { status: 400 });
   }
-  if (!category || !Object.values(Category).includes(category)) {
+  if (!category || !VALID_CATEGORIES.includes(category)) {
     return NextResponse.json({ error: "Valid category is required" }, { status: 400 });
   }
   if (!priceMin || !priceMax || Number(priceMin) > Number(priceMax)) {
