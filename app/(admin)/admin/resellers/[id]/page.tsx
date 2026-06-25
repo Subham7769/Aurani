@@ -59,7 +59,7 @@ export default async function ResellerDetailPage({
 
   if (!reseller) notFound();
 
-  const orderRows: OrderRow[] = reseller.orders.map((o) => ({
+  const orderRows: OrderRow[] = reseller.orders.map((o: typeof reseller.orders[number]) => ({
     id: o.id,
     product: o.product.title,
     amount: `₹${o.amount.toString()}`,
