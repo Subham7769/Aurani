@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { AuraniLogo } from "@/components/brand/aurani-logo";
+import { db } from "@/lib/db";
 
 function InstagramIcon({ className }: { className?: string }) {
   return (
@@ -30,7 +31,18 @@ function WhatsAppFooterIcon({ className }: { className?: string }) {
   );
 }
 
-export function SiteFooter() {
+export async function SiteFooter() {
+  let whatsappPhone = "";
+  try {
+    const reseller = await db.reseller.findFirst({
+      where: { isActive: true },
+      select: { whatsappPhone: true },
+    });
+    whatsappPhone = reseller?.whatsappPhone ?? "";
+  } catch {
+    // DB unavailable — hide WhatsApp link
+  }
+
   return (
     <footer className="mt-auto border-t border-border bg-card">
       <div className="mx-auto flex max-w-7xl flex-col items-center gap-4 px-4 py-8 sm:flex-row sm:justify-between sm:px-6 lg:px-8">
@@ -51,15 +63,17 @@ export function SiteFooter() {
           >
             <InstagramIcon className="h-5 w-5" />
           </Link>
-          <Link
-            href="https://wa.me/919999999999"
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="Contact Aurani on WhatsApp"
-            className="text-muted-foreground transition-colors hover:text-foreground"
-          >
-            <WhatsAppFooterIcon className="h-5 w-5" />
-          </Link>
+          {whatsappPhone && (
+            <Link
+              href={`https://wa.me/${whatsappPhone}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Contact Aurani on WhatsApp"
+              className="text-muted-foreground transition-colors hover:text-foreground"
+            >
+              <WhatsAppFooterIcon className="h-5 w-5" />
+            </Link>
+          )}
         </div>
 
         <p className="font-sans text-xs text-muted-foreground">
